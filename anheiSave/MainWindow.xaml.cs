@@ -13,6 +13,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Windows.Threading;
 
 namespace anheiSave
 {
@@ -26,18 +27,23 @@ namespace anheiSave
         string charFile;
         string lastEquipmentFile = "D:\\game\\save\\equipment.txt";
         //task
-        string diabloSave;
-        string taskSave = "D:\\game\\save\\task\\";
+        string diabloSaveFolder;
+        string taskSaveFolder = "D:\\game\\save\\task\\";
         string ext = ".d2s";
+        string taskSaveFile;
+        DateTime taskSaveFileLMT;
+        string taskDiabloFile;
+        DispatcherTimer timer;
         //back
         string backSave = "D:\\game\\save\\back\\";
+
 
         public MainWindow()
         {
             InitializeComponent();
             log.AppendText("welcome\n");
-            diabloSave = "C:\\Users\\" + Environment.UserName + "\\Saved Games\\Diablo II\\";
-            charFile = diabloSave + "Peter.d2s";
+            diabloSaveFolder = "C:\\Users\\" + Environment.UserName + "\\Saved Games\\Diablo II\\";
+            charFile = diabloSaveFolder + "Peter.d2s";
 
             //equipment list
             DirectoryInfo dirInfo = new DirectoryInfo(equipmentSave);
@@ -47,7 +53,7 @@ namespace anheiSave
                 listEquipment.Items.Add(fileInfo.Name);
             }
             //task list
-            dirInfo = new DirectoryInfo(taskSave);
+            dirInfo = new DirectoryInfo(taskSaveFolder);
             fileInfos = dirInfo.GetFiles();
             foreach (FileInfo fileInfo in fileInfos)
             {
@@ -59,7 +65,7 @@ namespace anheiSave
                 listTask.Items.Add(item);
             }
             //char list
-            dirInfo = new DirectoryInfo(diabloSave);
+            dirInfo = new DirectoryInfo(diabloSaveFolder);
             fileInfos = dirInfo.GetFiles("*" + ext);
             foreach (FileInfo fileInfo in fileInfos)
             {
@@ -68,7 +74,6 @@ namespace anheiSave
                 listChar.Items.Add(name.Replace(ext,""));
             }
         }
-
 
         private void ListEquipment_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
@@ -82,7 +87,6 @@ namespace anheiSave
                 File.Copy(equipmentSave + equipment, charFile, true);
                 File.WriteAllText(lastEquipmentFile, equipment);
                 log.AppendText(equipment + " is ready\n");
-
             }
         }
 
@@ -103,18 +107,64 @@ namespace anheiSave
                 ListBoxItem a = (ListBoxItem)listTask.SelectedItem;
                 string tag = a.Tag.ToString();
                 string content = a.Content.ToString();
-                File.Copy(taskSave + content + '_' + tag, diabloSave + tag, true);
+                File.Copy(taskSaveFolder + content + '_' + tag, diabloSaveFolder + tag, true);
                 log.AppendText(content + " is ready\n");
             }
         }
 
+        private void BtnAutoRecover_Click(object sender, RoutedEventArgs e)
+        {
+            if (BtnAutoRecover.Content.ToString() == "自动恢复")
+            {
+                if (listTask.SelectedItem != null)
+                {
+                    ListBoxItem a = (ListBoxItem)listTask.SelectedItem;
+                    string tag = a.Tag.ToString();
+                    string content = a.Content.ToString();
+                    taskSaveFile = content + '_' + tag;
+                    taskDiabloFile = tag;
+                    taskSaveFileLMT = File.GetLastWriteTime(taskSaveFolder + taskSaveFile);                    
+                    BtnAutoRecover.Content = "自动恢复中";
+                    log.AppendText(content + " start auto recover\n");
+                    //timer
+                    timer = new DispatcherTimer();
+                    timer.Interval = TimeSpan.FromSeconds(10);
+                    timer.Tick += autoRecover;
+                    timer.IsEnabled = true;
+                    timer.Start();
+                }
+            }
+            else
+            {
+                timer.IsEnabled = false;
+                timer.Stop();
+                timer = null;
+                BtnAutoRecover.Content = "自动恢复";
+                log.AppendText("stop auto recover\n");
+               
+            }
+
+        }
+
+        private void autoRecover(object sender, EventArgs e)
+        {
+            string taskDiabloFullPath = diabloSaveFolder + taskDiabloFile;
+            DateTime saveTime = File.GetLastWriteTime(taskDiabloFullPath);
+            log.AppendText(saveTime.ToString());
+            log.AppendText(taskSaveFileLMT.ToString());
+            if (taskSaveFileLMT.CompareTo(saveTime) < 0)
+            {
+                File.Copy(taskSaveFolder + taskSaveFile, taskDiabloFullPath, true);
+                log.AppendText(taskSaveFile + " recover\n");
+            }
+        }
         private void BtnBack_Click(object sender, RoutedEventArgs e)
         {
             if (listChar.SelectedItem != null)
             {
                 string nick = (string)listChar.SelectedItem;
                 string full = nick + ext;
-                File.Copy(diabloSave + full, backSave + full, true);
+                File.Copy(diabloSaveFolder + full, backSave + full, true);
                 log.AppendText(nick + " is back up\n");
             }
         }
@@ -125,9 +175,11 @@ namespace anheiSave
             {
                 string nick = (string)listChar.SelectedItem;
                 string full = nick + ext;
-                File.Copy(backSave + full, diabloSave + full, true);
-                log.AppendText(nick + " is back up\n");
+                File.Copy(backSave + full, diabloSaveFolder + full, true);
+                log.AppendText(nick + " is recover\n");
             }
         }
+
+
     }
 }
