@@ -8,13 +8,14 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Grid>
-        <ListBox x:Name="listEquipment" HorizontalAlignment="Left" Height="282" Margin="35,43,0,0" VerticalAlignment="Top" Width="120" SelectionChanged="ListEquipment_SelectionChanged"/>
-        <ListBox x:Name="listTask" HorizontalAlignment="Left" Height="122" Margin="195,43,0,0" VerticalAlignment="Top" Width="100" SelectionChanged="ListTask_SelectionChanged"/>
-        <RichTextBox x:Name="log" HorizontalAlignment="Left" Height="282" Margin="540,43,0,0" VerticalAlignment="Top" Width="230"/>
-        <Button x:Name="btnRecove" Content="恢 复" HorizontalAlignment="Left" Margin="195,201,0,0" VerticalAlignment="Top" Width="75" RenderTransformOrigin="0.133,-0.526" Click="BtnRecove_Click"/>
-        <ListBox x:Name="listChar" HorizontalAlignment="Left" Height="197" Margin="330,43,0,0" VerticalAlignment="Top" Width="135"/>
-        <Button x:Name="BtnBack" Content="备 份" HorizontalAlignment="Left" Margin="330,266,0,0" VerticalAlignment="Top" Width="75" Click="BtnBack_Click"/>
-        <Button x:Name="BtnRecoverC" Content="还 原" HorizontalAlignment="Left" Margin="330,306,0,0" VerticalAlignment="Top" Width="75" RenderTransformOrigin="-0.133,0.263" Click="BtnRecoverC_Click"/>
-        <Button x:Name="BtnAutoRecover" Content="自动恢复" HorizontalAlignment="Left" Margin="175,241,0,0" VerticalAlignment="Top" Width="135" Click="BtnAutoRecover_Click"/>
+        <ListBox x:Name="listEquipment" HorizontalAlignment="Left" Height="305" Margin="30,20,0,0" VerticalAlignment="Top" Width="120" SelectionChanged="ListEquipment_SelectionChanged"/>
+        <ListBox x:Name="listTask" HorizontalAlignment="Left" Height="160" Margin="175,20,0,0" VerticalAlignment="Top" Width="120" SelectionChanged="ListTask_SelectionChanged"/>
+        <TextBox x:Name="log" HorizontalAlignment="Left" Height="282" Margin="515,20,0,0" VerticalAlignment="Top" Width="230"/>
+        <Button x:Name="btnRecove" Content="恢 复" HorizontalAlignment="Left" Margin="175,202,0,0" VerticalAlignment="Top" Width="75" RenderTransformOrigin="0.133,-0.526" Click="BtnRecove_Click"/>
+        <ListBox x:Name="listChar" HorizontalAlignment="Left" Height="160" Margin="330,20,0,0" VerticalAlignment="Top" Width="135"/>
+        <Button x:Name="BtnBack" Content="备 份" HorizontalAlignment="Left" Margin="330,202,0,0" VerticalAlignment="Top" Width="75" Click="BtnBack_Click" RenderTransformOrigin="0.6,-1.105"/>
+        <Button x:Name="BtnRecoverC" Content="还 原" HorizontalAlignment="Left" Margin="330,235,0,0" VerticalAlignment="Top" Width="75" RenderTransformOrigin="-0.133,0.263" Click="BtnRecoverC_Click"/>
+        <Button x:Name="BtnAutoRecover" Content="自动恢复" HorizontalAlignment="Left" Margin="175,270,0,0" VerticalAlignment="Top" Width="95" Click="BtnAutoRecoverX_Click"/>
+        <Button x:Name="BtnAutoRecoverC" Content="自动恢复" HorizontalAlignment="Left" Margin="330,270,0,0" VerticalAlignment="Top" Width="95" Click="BtnAutoRecoverX_Click" />
     </Grid>
 </Window>

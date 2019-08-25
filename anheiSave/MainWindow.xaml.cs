@@ -30,13 +30,14 @@ namespace anheiSave
         string diabloSaveFolder;
         string taskSaveFolder = "D:\\game\\save\\task\\";
         string ext = ".d2s";
-        string taskSaveFile;
-        DateTime taskSaveFileLMT;
-        string taskDiabloFile;
-        DispatcherTimer timer;
+      
         //back
         string backSave = "D:\\game\\save\\back\\";
-
+        //atuo
+        DispatcherTimer timer;
+        string autoSourceFile;
+        string autoTargetFile;
+        DateTime autoSourceFileLMTime;
 
         public MainWindow()
         {
@@ -112,52 +113,8 @@ namespace anheiSave
             }
         }
 
-        private void BtnAutoRecover_Click(object sender, RoutedEventArgs e)
-        {
-            if (BtnAutoRecover.Content.ToString() == "自动恢复")
-            {
-                if (listTask.SelectedItem != null)
-                {
-                    ListBoxItem a = (ListBoxItem)listTask.SelectedItem;
-                    string tag = a.Tag.ToString();
-                    string content = a.Content.ToString();
-                    taskSaveFile = content + '_' + tag;
-                    taskDiabloFile = tag;
-                    taskSaveFileLMT = File.GetLastWriteTime(taskSaveFolder + taskSaveFile);                    
-                    BtnAutoRecover.Content = "自动恢复中";
-                    log.AppendText(content + " start auto recover\n");
-                    //timer
-                    timer = new DispatcherTimer();
-                    timer.Interval = TimeSpan.FromSeconds(10);
-                    timer.Tick += autoRecover;
-                    timer.IsEnabled = true;
-                    timer.Start();
-                }
-            }
-            else
-            {
-                timer.IsEnabled = false;
-                timer.Stop();
-                timer = null;
-                BtnAutoRecover.Content = "自动恢复";
-                log.AppendText("stop auto recover\n");
-               
-            }
 
-        }
-
-        private void autoRecover(object sender, EventArgs e)
-        {
-            string taskDiabloFullPath = diabloSaveFolder + taskDiabloFile;
-            DateTime saveTime = File.GetLastWriteTime(taskDiabloFullPath);
-            log.AppendText(saveTime.ToString());
-            log.AppendText(taskSaveFileLMT.ToString());
-            if (taskSaveFileLMT.CompareTo(saveTime) < 0)
-            {
-                File.Copy(taskSaveFolder + taskSaveFile, taskDiabloFullPath, true);
-                log.AppendText(taskSaveFile + " recover\n");
-            }
-        }
+     
         private void BtnBack_Click(object sender, RoutedEventArgs e)
         {
             if (listChar.SelectedItem != null)
@@ -180,6 +137,67 @@ namespace anheiSave
             }
         }
 
+        private void BtnAutoRecoverX_Click(object sender, RoutedEventArgs e)
+        {
+            Button b = (Button)sender;
+            string bname = b.Name;
+            string btext = b.Content.ToString();
+            Boolean isSelect = false;
+            //clear timer
+            if (timer != null)
+            {
+                timer.IsEnabled = false;
+                timer.Stop();
+                timer = null;
+                BtnAutoRecover.Content = "自动恢复";
+                BtnAutoRecoverC.Content = "自动恢复";
+                log.AppendText("stop auto recover\n");
+            }
+           // set timer
+            if (btext == "自动恢复")
+            {
+                if(bname == "BtnAutoRecover" && listTask.SelectedItem != null)
+                {
+                    isSelect = true;
+                    ListBoxItem a = (ListBoxItem)listTask.SelectedItem;
+                    string tag = a.Tag.ToString();
+                    string content = a.Content.ToString();
+                    autoSourceFile = taskSaveFolder + content + '_' + tag;
+                    autoTargetFile = diabloSaveFolder + tag;               
+                    BtnAutoRecover.Content = "自动恢复中";
+                    log.AppendText(content + " start auto recover\n");                    
+                }
+                else if (bname == "BtnAutoRecoverC" && listChar.SelectedItem != null)
+                {
+                    isSelect = true;
+                    string nick = (string)listChar.SelectedItem;
+                    string full = nick + ext;
+                    autoSourceFile = backSave + full;
+                    autoTargetFile = diabloSaveFolder + full;                    
+                    log.AppendText(nick + " is recover\n");
+                }
 
+                // set time
+                if (isSelect)
+                {
+                    autoSourceFileLMTime = File.GetLastWriteTime(autoSourceFile);
+                    //timer
+                    timer = new DispatcherTimer();
+                    timer.Interval = TimeSpan.FromSeconds(10);
+                    timer.Tick += autoRecover;
+                    timer.IsEnabled = true;
+                    timer.Start();
+                }
+            }
+        }
+        private void autoRecover(object sender, EventArgs e)
+        {
+            DateTime saveTime = File.GetLastWriteTime(autoTargetFile);
+            if (autoSourceFileLMTime.CompareTo(saveTime) < 0)
+            {
+                File.Copy(autoSourceFile, autoTargetFile, true);
+                log.AppendText(autoTargetFile.Replace(diabloSaveFolder,"") + " recover\n");
+            }
+        }
     }
 }
