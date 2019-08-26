@@ -173,7 +173,8 @@ namespace anheiSave
                     string nick = (string)listChar.SelectedItem;
                     string full = nick + ext;
                     autoSourceFile = backSave + full;
-                    autoTargetFile = diabloSaveFolder + full;                    
+                    autoTargetFile = diabloSaveFolder + full;
+                    BtnAutoRecoverC.Content = "自动恢复中";
                     log.AppendText(nick + " is recover\n");
                 }
 
