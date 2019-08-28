@@ -17,5 +17,7 @@
         <Button x:Name="BtnRecoverC" Content="还 原" HorizontalAlignment="Left" Margin="330,235,0,0" VerticalAlignment="Top" Width="75" RenderTransformOrigin="-0.133,0.263" Click="BtnRecoverC_Click"/>
         <Button x:Name="BtnAutoRecover" Content="自动恢复" HorizontalAlignment="Left" Margin="175,270,0,0" VerticalAlignment="Top" Width="95" Click="BtnAutoRecoverX_Click"/>
         <Button x:Name="BtnAutoRecoverC" Content="自动恢复" HorizontalAlignment="Left" Margin="330,270,0,0" VerticalAlignment="Top" Width="95" Click="BtnAutoRecoverX_Click" />
+        <MediaElement x:Name="me1" HorizontalAlignment="Left" Height="34" Margin="175,335,0,0" VerticalAlignment="Top" Width="40" LoadedBehavior="Manual" RenderTransformOrigin="8.875,0.294"/>
+
     </Grid>
 </Window>

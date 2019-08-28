@@ -1,20 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using System.Windows.Threading;
-
 namespace anheiSave
 {
     /// <summary>
@@ -74,6 +62,8 @@ namespace anheiSave
                 string[] name_s = name.Split('_');
                 listChar.Items.Add(name.Replace(ext,""));
             }
+            //sound
+            me1.Source = new Uri("D:\\game\\save\\录音.mp3");
         }
 
         private void ListEquipment_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -198,7 +188,10 @@ namespace anheiSave
             {
                 File.Copy(autoSourceFile, autoTargetFile, true);
                 log.AppendText(autoTargetFile.Replace(diabloSaveFolder,"") + " recover\n");
+                me1.Stop();
+                me1.Play();               
             }
         }
+
     }
 }
