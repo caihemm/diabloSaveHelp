@@ -11,16 +11,16 @@ namespace anheiSave
     public partial class MainWindow : Window
     {
         //equipment
-        string equipmentSave = "D:\\game\\save\\equipment\\";
+        string equipmentSave;
         string charFile;
-        string lastEquipmentFile = "D:\\game\\save\\equipment.txt";
+        string lastEquipmentFile;
         //task
         string diabloSaveFolder;
-        string taskSaveFolder = "D:\\game\\save\\task\\";
+        string taskSaveFolder;
         string ext = ".d2s";
       
         //back
-        string backSave = "D:\\game\\save\\back\\";
+        string backSave;
         //atuo
         DispatcherTimer timer;
         string autoSourceFile;
@@ -30,8 +30,15 @@ namespace anheiSave
         public MainWindow()
         {
             InitializeComponent();
-            log.AppendText("welcome\n");
-            diabloSaveFolder = "C:\\Users\\" + Environment.UserName + "\\Saved Games\\Diablo II\\";
+            //path
+            string gamesave = AppDomain.CurrentDomain.BaseDirectory + "save\\";
+            equipmentSave = gamesave + "equipment\\";
+            lastEquipmentFile = gamesave + "equipment.txt";
+            taskSaveFolder = gamesave + "task\\";
+            backSave = gamesave + "back\\";
+
+            string userFolder = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+            diabloSaveFolder = userFolder + "\\Saved Games\\Diablo II\\";
             charFile = diabloSaveFolder + "Peter.d2s";
 
             //equipment list
@@ -63,7 +70,8 @@ namespace anheiSave
                 listChar.Items.Add(name.Replace(ext,""));
             }
             //sound
-            me1.Source = new Uri("D:\\game\\save\\录音.mp3");
+            me1.Source = new Uri(gamesave+ "录音.mp3");
+            log.AppendText("welcome\n");
         }
 
         private void ListEquipment_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -72,8 +80,11 @@ namespace anheiSave
             {
                 //backup last file
                 string lastEquipment = File.ReadAllText(lastEquipmentFile);
-                File.Copy(charFile, equipmentSave + lastEquipment, true);
-                log.AppendText("save " + lastEquipment + "\n");
+                if(lastEquipment != "")
+                {
+                    File.Copy(charFile, equipmentSave + lastEquipment, true);
+                    log.AppendText("save " + lastEquipment + "\n");
+                }
                 string equipment = (string)listEquipment.SelectedItem;
                 File.Copy(equipmentSave + equipment, charFile, true);
                 File.WriteAllText(lastEquipmentFile, equipment);
@@ -165,7 +176,7 @@ namespace anheiSave
                     autoSourceFile = backSave + full;
                     autoTargetFile = diabloSaveFolder + full;
                     BtnAutoRecoverC.Content = "自动恢复中";
-                    log.AppendText(nick + " is recover\n");
+                    log.AppendText(nick + " start auto recover\n");
                 }
 
                 // set time
