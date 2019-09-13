@@ -80,7 +80,7 @@ namespace anheiSave
             {
                 //backup last file
                 string lastEquipment = File.ReadAllText(lastEquipmentFile);
-                if(lastEquipment != "")
+                if(lastEquipment != "" && File.Exists(charFile))
                 {
                     File.Copy(charFile, equipmentSave + lastEquipment, true);
                     log.AppendText("save " + lastEquipment + "\n");
